@@ -1,0 +1,61 @@
+from kivy.app import App
+from kivy.uix.button import Button
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.label import Label
+from kivy.uix.textinput import TextInput
+from kivy.utils import get_color_from_hex
+
+class StyledWordCounterApp(App):
+    def build(self):
+        # تنظيم العناصر عمودياً
+        layout = BoxLayout(orientation='vertical', padding=25, spacing=15)
+        
+        # 1. تغيير لون خلفية التطبيق كاملة (رمادي غامق أنيق بدلاً من الأسود)
+        from kivy.core.window import Window
+        Window.clearcolor = get_color_from_hex('#1e293b') # لون Slate داكن مريح للعين
+        
+        # 2. عنوان التطبيق بلون أبيض وحجم مناسب
+        self.label = Label(
+            text="Type or paste your text below:\n(Results will appear here)", 
+            font_size='18sp',
+            halign='center',
+            color=get_color_from_hex('#f8fafc') # لون أبيض ناصع
+        )
+        layout.add_widget(self.label)
+        
+        # 3. خانة إدخال النصوص بتصميم مريح
+        self.user_input = TextInput(
+            multiline=True, 
+            font_size='16sp', 
+            hint_text="Start typing here...",
+            background_color=get_color_from_hex('#f1f5f9'), # خلفية بيضاء خفيفة للمربع
+            foreground_color=get_color_from_hex('#0f172a') # لون الخط داخل المربع (كحلي داكن)
+        )
+        layout.add_widget(self.user_input)
+        
+        # 4. زر التحليل بلون جذاب (أزرق نيوني) عند الضغط
+        btn = Button(
+            text="Analyze Text", 
+            background_normal='', # تفعيل تغيير اللون المخصص
+            background_color=get_color_from_hex('#0ea5e9'), # لون أزرق سماوي حيوي
+            font_size='20sp', 
+            size_hint_y=None, 
+            height=55
+        )
+        btn.bind(on_press=self.analyze_text)
+        layout.add_widget(btn)
+        
+        return layout
+
+    def analyze_text(self, instance):
+        text = self.user_input.text
+        char_count = len(text)
+        words_list = text.split()
+        word_count = len(words_list)
+        
+        # عرض النتيجة بلون أخضر مبهج للنجاح
+        self.label.color = get_color_from_hex('#34d399') 
+        self.label.text = f"Analysis Results:\n\nWords: {word_count}  |  Characters: {char_count}"
+
+if __name__ == '__main__':
+    StyledWordCounterApp().run()
